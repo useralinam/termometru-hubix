@@ -16,7 +16,7 @@
   .sub{font-size:11px;color:var(--mint);letter-spacing:2px;text-transform:uppercase;font-weight:700}
   nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
   nav button{background:transparent;border:1px solid var(--sage);color:#fff;padding:8px 14px;border-radius:999px;font:600 13px Montserrat,Arial;cursor:pointer}
-  nav button.on{background:var(--mint);color:var(--teal);border-color:var(--mint)}
+  nav button.on{background:transparent;color:var(--mint);border-color:var(--mint)}
   main{padding:20px 24px;max-width:1300px;margin:0 auto}
   h1{font-size:24px;margin:8px 0 6px} h2{font-size:18px;margin:22px 0 10px}
   p.lead{margin:0 0 16px;color:var(--grey);font-size:14px;max-width:900px;line-height:1.5}
@@ -36,12 +36,12 @@
   tr.changed td{background:#FFF8EC}
   th{text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);padding:8px;border-bottom:1px solid var(--line)}
   td{padding:9px 8px;border-bottom:1px solid var(--mist);vertical-align:top}
-  .score{display:inline-block;min-width:34px;text-align:center;font-weight:800;border-radius:8px;padding:2px 6px}
-  .s-2{background:#F8C9BC;color:#8E3420}.s-1{background:#FDE3DC;color:var(--red)}.s0{background:var(--mist);color:var(--grey)}.s1{background:#DDF0E6;color:var(--deep)}.s2{background:var(--deep);color:#fff}
+  .score{display:inline-block;min-width:34px;text-align:center;font-weight:800;padding:2px 0;background:none}
+  .s-2{color:#8E3420}.s-1{color:var(--red)}.s0{color:var(--grey)}.s1{color:var(--deep)}.s2{color:var(--deep)}
   .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2DBE7E;margin-right:6px;vertical-align:middle}
   .off{background:var(--coral)}
   a{color:var(--deep)}
-  .pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
+  .pill{display:inline-block;padding:3px 0;font-size:12px;font-weight:800;background:none}
   .sim{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
   .sim label{display:block;font-size:12px;color:var(--grey);font-weight:700;margin-bottom:4px}
   input[type=number]{width:100%;font:600 14px Montserrat,Arial;padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--teal)}
@@ -52,7 +52,7 @@
   .mix{display:flex;height:24px;border-radius:8px;overflow:hidden;font-size:12px;font-weight:800;color:#fff}
   .mix div{display:flex;align-items:center;justify-content:center}
   .cta{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-  .btn{background:var(--mint);color:var(--teal);font-weight:800;padding:12px 18px;border-radius:10px;text-decoration:none;display:inline-block}
+  .btn{background:transparent;color:var(--mint);border:1px solid var(--mint);font-weight:800;padding:12px 18px;border-radius:10px;text-decoration:none;display:inline-block}
   .hidden{display:none}
   footer{font-size:11px;color:var(--grey);text-align:center;padding:24px;line-height:1.6}
   @media (max-width:640px){.temp{font-size:48px} header{padding:14px 16px} main{padding:16px}}
@@ -61,12 +61,6 @@
 <body>
 <header>
   <div><div class="brand">HUBIX <span>Termometrul pieței</span></div><div class="sub">Date publice · actualizate automat</div></div>
-  <nav>
-    <button data-v="termo" class="on">Termometrul</button>
-    <button data-v="prag">Pragul meu de confort</button>
-    <button data-v="sim">Regim hotelier vs. chirie</button>
-    <button data-v="city">Orașe</button>
-  </nav>
 </header>
 
 <main>
@@ -96,54 +90,9 @@
   <p class="lead" style="margin-bottom:10px">Valorile de mai jos sunt estimarea HUBIX la <b id="mdate"></b>. Schimbați oricare dintre ele și termometrul complet se recalculează pe loc.</p>
   <div class="card" style="overflow:auto">
     <table><thead><tr><th>Indicator</th><th>Valoarea dvs.</th><th>Regula de scor</th><th>Scor</th><th>Pondere</th><th>Sursa estimării HUBIX</th></tr></thead><tbody id="xrows"></tbody></table>
-    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="mreset" style="border:0;border-radius:10px;padding:10px 16px;font:800 13px Montserrat,Arial;background:var(--teal);color:#fff;cursor:pointer">Revino la estimarea HUBIX</button><span class="note" id="mstate" style="margin:0"></span></div>
+    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="mreset" style="border-radius:10px;padding:10px 16px;font:800 13px Montserrat,Arial;background:transparent;border:1px solid var(--teal);color:var(--teal);cursor:pointer">Revino la estimarea HUBIX</button><span class="note" id="mstate" style="margin:0"></span></div>
   </div>
   <div class="note">Stări: RECESIUNE sub −60 · CONTRACȚIE −60…−20 · NEUTRU −20…+20 · EXPANSIUNE +20…+60 · BOOM peste +60. Instrument informativ, nu recomandare de investiții.</div>
-</section>
-
-<!-- PRAG -->
-<section id="v-prag" class="hidden">
-  <h1>Ce procent din rată e ok să fie acoperit?</h1>
-  <p class="lead">Într-o piață care se răcește, întrebarea nu mai e „cât profit fac”, ci „cât din rată acoperă apartamentul”. Completați cu cifrele voastre.</p>
-  <div class="card sim">
-    <div><label>Rata lunară la bancă (€)</label><input type="number" id="p_rate" value="600"></div>
-    <div><label>Întreținere + utilități când stă gol (€)</label><input type="number" id="p_empty" value="80"></div>
-    <div><label>Chirie pe termen lung (€)</label><input type="number" id="p_lt" value="400"></div>
-    <div><label>Tarif pe noapte, regim hotelier (€)</label><input type="number" id="p_adr" value="48"></div>
-    <div><label>Ocupare regim hotelier (%)</label><input type="number" id="p_occ" value="65"></div>
-    <div><label>Prima de preț în zilele bune (%)</label><input type="number" id="p_prem" value="20"></div>
-  </div>
-  <div class="card" style="margin-top:12px"><div class="lbl">Pragul meu: accept ca venitul să acopere cel puțin <b id="p_thV"></b> din rată</div><input type="range" id="p_th" min="0" max="100" value="60"></div>
-  <div class="row" style="margin-top:12px" id="p_opts"></div>
-  <div class="note">Calcul ilustrativ: comisioane platforme 12%, TVA 11%, administrare 25%, utilități 100 €/lună în regim hotelier; chirie lungă cu 55 din 60 de luni ocupate și impozit 10%.</div>
-</section>
-
-<!-- SIM -->
-<section id="v-sim" class="hidden">
-  <h1>Cât rămâne la proprietar: regim hotelier vs. chirie clasică</h1>
-  <div class="card sim">
-    <div><label>Tarif mediu pe noapte (lei)</label><input type="number" id="s_adr" value="250"></div>
-    <div><label>Ocupare (%)</label><input type="number" id="s_occ" value="80"></div>
-    <div><label>Rezervări directe (%)</label><input type="number" id="s_dir" value="25"></div>
-    <div><label>Comision platforme (%)</label><input type="number" id="s_ota" value="12"></div>
-    <div><label>TVA inclus (%)</label><input type="number" id="s_vat" value="11"></div>
-    <div><label>Comision administrare (%)</label><input type="number" id="s_mgmt" value="25"></div>
-    <div><label>Utilități + impozit + altele (lei/lună)</label><input type="number" id="s_cost" value="1000"></div>
-    <div><label>Chirie clasică (€/lună)</label><input type="number" id="s_rent" value="400"></div>
-    <div><label>Curs EUR/RON <span id="fxsrc"></span></label><input type="number" id="s_fx" value="5.0" step="0.01"></div>
-  </div>
-  <div class="row" style="margin-top:14px">
-    <div class="card" style="flex:1;min-width:260px"><div class="lbl">Chirie clasică</div><div class="temp" style="font-size:36px" id="r_lt"></div><div class="note" id="r_lt_n"></div></div>
-    <div class="card dark" style="flex:1;min-width:260px"><div class="lbl">Regim hotelier, administrat</div><div class="temp" style="font-size:36px;color:var(--mint)" id="r_str"></div><div class="note" id="r_str_n"></div></div>
-  </div>
-  <div class="card" style="margin-top:14px"><div id="r_delta" style="font-size:19px;font-weight:800"></div><div class="note">Simulare ilustrativă, nu o garanție. Rezultatul real depinde de zonă, sezon, evenimente, calitate și costuri.</div></div>
-</section>
-
-<!-- CITY -->
-<section id="v-city" class="hidden">
-  <h1>Fiecare oraș are alt fel de turism</h1>
-  <p class="lead">Cu cât turismul e mai sezonier, cu atât crește rolul chiriei pe termen mediu în extrasezon. Ponderi estimative HUBIX.</p>
-  <div class="card" style="overflow:auto"><table><thead><tr><th>Oraș</th><th>Business</th><th>City break și weekend</th><th>Sezonier</th><th>Recomandare</th><th>Regim hotelier : termen mediu</th></tr></thead><tbody id="crows"></tbody></table></div>
 </section>
 
 <div class="card dark cta" style="margin-top:24px">
@@ -257,29 +206,8 @@ function recalc(full){
     <div class="note" style="font-size:14px">${diff<0?"Datele publice arată o piață mai caldă decât este. Ce lipsește din ele (tranzacțiile reale, creditarea, puterea de cumpărare, taxele și performanța efectivă a apartamentelor) trage temperatura în jos.":diff>0?"Cu valorile alese, datele complete arată o piață mai caldă decât sugerează indicatorii publici.":"Cu valorile alese, cele două termometre coincid."} Diferența asta e motivul pentru care deciziile despre un apartament se iau pe date complete, nu doar pe știri.</div>`;
   renderManual();
 }
-// ===== Prag =====
-function renderPrag(){const v=id=>parseFloat(document.getElementById(id).value)||0;const rate=v("p_rate"),th=v("p_th");document.getElementById("p_thV").textContent=th+"%";
-  const empty=-v("p_empty"),lt=v("p_lt")*55/60*0.9,st=30*v("p_occ")/100*v("p_adr")*(1+v("p_prem")/100)*0.88/1.11*0.75-100;
-  const opts=[["Îl las gol",empty,"pierd rata întreagă plus întreținerea"],["Chirie pe termen lung",lt,"preț fixat pe un an, uzură mai mare"],["Regim hotelier, administrat",st,"preț ajustat zilnic, prima de "+v("p_prem")+"%"]];
-  const best=Math.max(...opts.map(o=>o[1]));
-  document.getElementById("p_opts").innerHTML=opts.map(([n,val,d])=>{const cov=Math.max(0,val/rate*100),ok=cov>=th;return `<div class="opt ${val===best?'best':''}"><div class="lbl">${n}</div><div class="v" style="color:${val<0?'var(--coral)':'var(--deep)'}">${val<0?"−":""}${Math.abs(Math.round(val))} €/lună</div><div style="font-weight:700;margin-top:4px">acoperă ${Math.round(cov)}% din rată</div><div class="note">${d}</div><div style="margin-top:8px"><span class="pill" style="background:${ok?'#DDF0E6':'#FDE3DC'};color:${ok?'var(--deep)':'#B0442B'}">${ok?"peste pragul meu":"sub pragul meu"}</span></div></div>`}).join("")}
-// ===== Simulator =====
-function renderSim(){const v=id=>parseFloat(document.getElementById(id).value)||0;const nights=30*v("s_occ")/100,gross=nights*v("s_adr"),dir=v("s_dir")/100;
-  const base=(gross*(1-dir)*(1-v("s_ota")/100)+gross*dir)/(1+v("s_vat")/100);const owner=base*(1-v("s_mgmt")/100)-v("s_cost");const lt=v("s_rent")*55/60*v("s_fx")-130;
-  const f=x=>Math.round(x).toLocaleString("ro-RO")+" lei/lună";document.getElementById("r_lt").textContent=f(lt);document.getElementById("r_lt_n").textContent=`${v("s_rent")} € × 55/60 luni, minus impozit și altele`;
-  document.getElementById("r_str").textContent=f(owner);document.getElementById("r_str_n").textContent=`${nights.toFixed(0)} nopți × ${v("s_adr")} lei; ${v("s_dir")}% rezervări directe, fără comision de platformă`;
-  const d=(owner-lt)/lt*100;document.getElementById("r_delta").innerHTML=d>=0?`Regimul hotelier aduce <span style="color:var(--deep)">+${d.toFixed(0)}%</span> față de chiria clasică, în acest scenariu.`:`În acest scenariu, chiria clasică e mai bună cu <span style="color:var(--coral)">${(-d).toFixed(0)}%</span>.`}
-async function fx(){try{const d=await getJSON(ECB+"EXR/D.RON.EUR.SP00.A?lastNObservations=1&format=jsondata");const o=Object.values(d.dataSets[0].series)[0].observations;const val=Object.values(o)[0][0];document.getElementById("s_fx").value=val.toFixed(4);document.getElementById("fxsrc").textContent="(BCE, live)";renderSim()}catch(e){}}
-// ===== Orașe =====
-const CITIES=[["București",60,35,5],["Timișoara",60,35,5],["Cluj-Napoca",55,40,5],["Sibiu",30,50,20],["Brașov",25,45,30],["Mamaia",5,15,80]];
-function renderCity(){document.getElementById("crows").innerHTML=CITIES.map(([n,b,w,s])=>{const sh=Math.round(b*0.85+w*0.95+s*0.55),mid=100-sh;const rec=s>=50?"Vara regim hotelier, extrasezon termen mediu":b>=55?"Regim hotelier tot anul, firme luni–joi":"Regim hotelier, oferte pentru weekend și evenimente";
-  return `<tr><td><b>${n}</b></td><td>${b}%</td><td>${w}%</td><td>${s}%</td><td>${rec}</td><td style="min-width:160px"><div class="mix"><div style="width:${sh}%;background:#31635F">${sh}</div><div style="width:${mid}%;background:#F2826A">${mid}</div></div></td></tr>`}).join("")}
-// ===== Navigare =====
-document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["termo","prag","sim","city"].forEach(v=>document.getElementById("v-"+v).classList.toggle("hidden",v!==b.dataset.v));history.replaceState(null,"","#"+b.dataset.v)});
-const h=location.hash.slice(1);if(["prag","sim","city"].includes(h))document.querySelector(`nav button[data-v="${h}"]`).click();
-document.querySelectorAll("#v-prag input").forEach(i=>i.oninput=renderPrag);document.querySelectorAll("#v-sim input").forEach(i=>i.oninput=renderSim);
 document.getElementById("mreset").onclick=()=>{MAN.forEach((m,i)=>mval[i]=m.def);recalc(false)};
-renderManual();renderPrag();renderSim();renderCity();fx();run();
+renderManual();run();
 </script>
 </body>
 </html>
