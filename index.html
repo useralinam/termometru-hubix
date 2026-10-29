@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Termometrul pieței imobiliare · HUBIX</title>
+<meta name="description" content="Termometrul pieței imobiliare din România: date publice, actualizate automat din Eurostat și Banca Centrală Europeană.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1B2E30;--teal:#2A4345;--deep:#31635F;--sage:#517D79;--mint:#8AC8A6;--mist:#F0F4F7;--soft:#E3EFE9;--line:#D4DAE0;--grey:#6F7E7B;--coral:#F2826A;--red:#B0442B}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Montserrat,"Segoe UI",Arial,sans-serif;background:var(--mist);color:var(--teal)}
+  header{background:var(--teal);color:#fff;padding:18px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{font-weight:800;font-size:20px}.brand span{color:var(--mint)}
+  .sub{font-size:11px;color:var(--mint);letter-spacing:2px;text-transform:uppercase;font-weight:700}
+  nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid var(--sage);color:#fff;padding:8px 14px;border-radius:999px;font:600 13px Montserrat,Arial;cursor:pointer}
+  nav button.on{background:var(--mint);color:var(--teal);border-color:var(--mint)}
+  main{padding:20px 24px;max-width:1300px;margin:0 auto}
+  h1{font-size:24px;margin:8px 0 6px} h2{font-size:18px;margin:22px 0 10px}
+  p.lead{margin:0 0 16px;color:var(--grey);font-size:14px;max-width:900px;line-height:1.5}
+  .row{display:flex;gap:16px;flex-wrap:wrap}
+  .card{background:#fff;border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .dark{background:var(--teal);color:#fff}
+  .gwrap{flex:1;min-width:300px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .temp{font-size:64px;font-weight:800;line-height:1}
+  .state{font-size:18px;font-weight:800;margin-top:6px}
+  .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:800;color:var(--grey)}
+  .dark .lbl{color:var(--mint)}
+  .note{font-size:12px;color:var(--grey);margin-top:8px;line-height:1.5}
+  .dark .note{color:#cfe6dc}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);padding:8px;border-bottom:1px solid var(--line)}
+  td{padding:9px 8px;border-bottom:1px solid var(--mist);vertical-align:top}
+  .score{display:inline-block;min-width:34px;text-align:center;font-weight:800;border-radius:8px;padding:2px 6px}
+  .s-2{background:#F8C9BC;color:#8E3420}.s-1{background:#FDE3DC;color:var(--red)}.s0{background:var(--mist);color:var(--grey)}.s1{background:#DDF0E6;color:var(--deep)}.s2{background:var(--deep);color:#fff}
+  .live{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2DBE7E;margin-right:6px;vertical-align:middle}
+  .off{background:var(--coral)}
+  a{color:var(--deep)}
+  .pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
+  .sim{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+  .sim label{display:block;font-size:12px;color:var(--grey);font-weight:700;margin-bottom:4px}
+  input[type=number]{width:100%;font:600 14px Montserrat,Arial;padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--teal)}
+  input[type=range]{width:100%;accent-color:var(--deep)}
+  .opt{border-radius:14px;padding:16px;background:#fff;flex:1;min-width:230px}
+  .opt.best{outline:3px solid var(--mint)}
+  .opt .v{font-size:28px;font-weight:800}
+  .mix{display:flex;height:24px;border-radius:8px;overflow:hidden;font-size:12px;font-weight:800;color:#fff}
+  .mix div{display:flex;align-items:center;justify-content:center}
+  .cta{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .btn{background:var(--mint);color:var(--teal);font-weight:800;padding:12px 18px;border-radius:10px;text-decoration:none;display:inline-block}
+  .hidden{display:none}
+  footer{font-size:11px;color:var(--grey);text-align:center;padding:24px;line-height:1.6}
+  @media (max-width:640px){.temp{font-size:48px} header{padding:14px 16px} main{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div><div class="brand">HUBIX <span>Termometrul pieței</span></div><div class="sub">Date publice · actualizate automat</div></div>
+  <nav>
+    <button data-v="termo" class="on">Termometrul</button>
+    <button data-v="prag">Pragul meu de confort</button>
+    <button data-v="sim">Regim hotelier vs. chirie</button>
+    <button data-v="city">Orașe</button>
+  </nav>
+</header>
+
+<main>
+<!-- TERMOMETRU -->
+<section id="v-termo">
+  <h1>Suntem în expansiune sau în contracție?</h1>
+  <p class="lead">Pagina citește la fiecare deschidere ultimele date publicate de Eurostat și de Banca Centrală Europeană, dă fiecărui indicator un scor și calculează o temperatură de la −100 la +100. Alături vedeți termometrul HUBIX, care folosește în plus date din platforme plătite și din operarea propriilor apartamente.</p>
+  <div class="row">
+    <div class="card gwrap">
+      <svg viewBox="0 0 320 190" width="300" id="g1"></svg>
+      <div><div class="lbl">Termometrul public · date gratuite, live</div><div class="temp" id="t1">…</div><div class="state" id="s1">se încarcă datele</div><div class="note" id="d1"></div></div>
+    </div>
+    <div class="card gwrap dark">
+      <svg viewBox="0 0 320 190" width="300" id="g2"></svg>
+      <div><div class="lbl">Termometrul HUBIX · date complete</div><div class="temp" id="t2">…</div><div class="state" id="s2"></div><div class="note" id="d2"></div></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px" id="diffBox"></div>
+
+  <h2>Indicatorii publici, citiți live</h2>
+  <div class="card" style="overflow:auto">
+    <table><thead><tr><th>Indicator</th><th>Ultima valoare</th><th>Perioada</th><th>Regula de scor</th><th>Scor</th><th>Pondere</th><th>Sursa</th></tr></thead><tbody id="rows"></tbody></table>
+    <div class="note"><span class="live"></span>citit acum din sursă · <span class="live off"></span>sursa nu a răspuns, se afișează ultima valoare cunoscută. Scor de la −2 (frânează piața) la +2 (o împinge).</div>
+  </div>
+
+  <h2>Ce mai folosește HUBIX, în plus</h2>
+  <div class="card" style="overflow:auto">
+    <table><thead><tr><th>Indicator</th><th>Valoare</th><th>De ce nu e în varianta publică</th></tr></thead><tbody id="xrows"></tbody></table>
+  </div>
+  <div class="note">Stări: RECESIUNE sub −60 · CONTRACȚIE −60…−20 · NEUTRU −20…+20 · EXPANSIUNE +20…+60 · BOOM peste +60. Instrument informativ, nu recomandare de investiții.</div>
+</section>
+
+<!-- PRAG -->
+<section id="v-prag" class="hidden">
+  <h1>Ce procent din rată e ok să fie acoperit?</h1>
+  <p class="lead">Într-o piață care se răcește, întrebarea nu mai e „cât profit fac”, ci „cât din rată acoperă apartamentul”. Completați cu cifrele voastre.</p>
+  <div class="card sim">
+    <div><label>Rata lunară la bancă (€)</label><input type="number" id="p_rate" value="600"></div>
+    <div><label>Întreținere + utilități când stă gol (€)</label><input type="number" id="p_empty" value="80"></div>
+    <div><label>Chirie pe termen lung (€)</label><input type="number" id="p_lt" value="400"></div>
+    <div><label>Tarif pe noapte, regim hotelier (€)</label><input type="number" id="p_adr" value="48"></div>
+    <div><label>Ocupare regim hotelier (%)</label><input type="number" id="p_occ" value="65"></div>
+    <div><label>Prima de preț în zilele bune (%)</label><input type="number" id="p_prem" value="20"></div>
+  </div>
+  <div class="card" style="margin-top:12px"><div class="lbl">Pragul meu: accept ca venitul să acopere cel puțin <b id="p_thV"></b> din rată</div><input type="range" id="p_th" min="0" max="100" value="60"></div>
+  <div class="row" style="margin-top:12px" id="p_opts"></div>
+  <div class="note">Calcul ilustrativ: comisioane platforme 12%, TVA 11%, administrare 25%, utilități 100 €/lună în regim hotelier; chirie lungă cu 55 din 60 de luni ocupate și impozit 10%.</div>
+</section>
+
+<!-- SIM -->
+<section id="v-sim" class="hidden">
+  <h1>Cât rămâne la proprietar: regim hotelier vs. chirie clasică</h1>
+  <div class="card sim">
+    <div><label>Tarif mediu pe noapte (lei)</label><input type="number" id="s_adr" value="250"></div>
+    <div><label>Ocupare (%)</label><input type="number" id="s_occ" value="80"></div>
+    <div><label>Rezervări directe (%)</label><input type="number" id="s_dir" value="25"></div>
+    <div><label>Comision platforme (%)</label><input type="number" id="s_ota" value="12"></div>
+    <div><label>TVA inclus (%)</label><input type="number" id="s_vat" value="11"></div>
+    <div><label>Comision administrare (%)</label><input type="number" id="s_mgmt" value="25"></div>
+    <div><label>Utilități + impozit + altele (lei/lună)</label><input type="number" id="s_cost" value="1000"></div>
+    <div><label>Chirie clasică (€/lună)</label><input type="number" id="s_rent" value="400"></div>
+    <div><label>Curs EUR/RON <span id="fxsrc"></span></label><input type="number" id="s_fx" value="5.0" step="0.01"></div>
+  </div>
+  <div class="row" style="margin-top:14px">
+    <div class="card" style="flex:1;min-width:260px"><div class="lbl">Chirie clasică</div><div class="temp" style="font-size:36px" id="r_lt"></div><div class="note" id="r_lt_n"></div></div>
+    <div class="card dark" style="flex:1;min-width:260px"><div class="lbl">Regim hotelier, administrat</div><div class="temp" style="font-size:36px;color:var(--mint)" id="r_str"></div><div class="note" id="r_str_n"></div></div>
+  </div>
+  <div class="card" style="margin-top:14px"><div id="r_delta" style="font-size:19px;font-weight:800"></div><div class="note">Simulare ilustrativă, nu o garanție. Rezultatul real depinde de zonă, sezon, evenimente, calitate și costuri.</div></div>
+</section>
+
+<!-- CITY -->
+<section id="v-city" class="hidden">
+  <h1>Fiecare oraș are alt fel de turism</h1>
+  <p class="lead">Cu cât turismul e mai sezonier, cu atât crește rolul chiriei pe termen mediu în extrasezon. Ponderi estimative HUBIX.</p>
+  <div class="card" style="overflow:auto"><table><thead><tr><th>Oraș</th><th>Business</th><th>City break și weekend</th><th>Sezonier</th><th>Recomandare</th><th>Regim hotelier : termen mediu</th></tr></thead><tbody id="crows"></tbody></table></div>
+</section>
+
+<div class="card dark cta" style="margin-top:24px">
+  <div><div class="lbl">Vreți analiza pentru apartamentul vostru?</div><div style="font-size:18px;font-weight:800;margin-top:4px">HUBIX Renting folosește datele complete și rezultatele reale din huburile proprii.</div></div>
+  <a class="btn" href="https://alinatomsa.biz/hubix" target="_blank" rel="noopener">Contact HUBIX Renting</a>
+</div>
+</main>
+<footer>HUBIX Renting · Termometrul pieței imobiliare · Date publice: Eurostat, Banca Centrală Europeană. Instrument informativ, nu constituie recomandare de investiții.<br><span id="stamp"></span></footer>
+
+<script>
+// ===== Config: termometrul HUBIX (actualizat manual de echipă) =====
+const HUBIX = {
+  temp: -41, date: "27 octombrie 2026",
+  extra: [
+    ["Dobânda de politică monetară BNR", "6,50%, menținută (8 oct.)", "BNR nu publică seria printr-un API public"],
+    ["Tranzacții imobiliare ANCPI", "−17,8% (ian.–sep.)", "comunicate lunare, fără API"],
+    ["Credite ipotecare noi", "−8,5% (sem. I)", "statistici BNR prelucrate"],
+    ["Salariul real", "−0,5% an/an (aug.)", "INS, fără API public stabil"],
+    ["Politica fiscală pentru gospodării", "TVA 21%, impozit locuință +70–80%", "evaluare calitativă"],
+    ["Performanța regimului hotelier", "venit, ocupare, tarif mediu pe oraș", "platforme plătite (AirDNA) și datele proprii din huburile HUBIX"],
+    ["Petrol (Brent), Fed", "Brent ~115 $; Fed crește dobânzile", "sursele nu permit citirea directă din browser"],
+  ]
+};
+// ===== Indicatori publici live =====
+const EU="https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/";
+const ECB="https://data-api.ecb.europa.eu/service/data/";
+const band=(v,b)=>v>=b[0]?2:v>=b[1]?1:v>=b[2]?0:v>=b[3]?-1:-2; // praguri descrescătoare
+const IND=[
+ {k:"hicp",n:"Inflația anuală (armonizată)",w:8,q:"prc_hicp_minr?geo=RO&coicop18=TOTAL&unit=RCH_A&lastTimePeriod=3",fmt:v=>v.toFixed(1)+"%",
+  sc:v=>v<3.5?2:v<5?1:v<6?0:v<8?-1:-2,rule:"<3,5 · 3,5–5 · 5–6 · 6–8 · >8",fb:[6.5,"2026-09"]},
+ {k:"gdp",n:"PIB, an/an",w:12,q:"namq_10_gdp?geo=RO&unit=CLV_PCH_SM&s_adj=SCA&na_item=B1GQ&lastTimePeriod=3",fmt:v=>(v>0?"+":"")+v.toFixed(1)+"%",
+  sc:v=>band(v,[3,1.5,0,-2]),rule:">3 · 1,5–3 · 0–1,5 · −2–0 · <−2",fb:[-1.9,"2026-Q2"]},
+ {k:"rate",n:"Dobânda interbancară la 3 luni (≈ ROBOR)",w:8,q:"irt_st_m?geo=RO&int_rt=IRT_M3&lastTimePeriod=3",fmt:v=>v.toFixed(2)+"%",
+  sc:v=>v<4?2:v<5?1:v<6?0:v<7?-1:-2,rule:"<4 · 4–5 · 5–6 · 6–7 · >7",fb:[5.72,"2026-09"]},
+ {k:"conf",n:"Încrederea consumatorilor",w:6,q:"ei_bsco_m?geo=RO&indic=BS-CSMCI&s_adj=SA&unit=BAL&lastTimePeriod=3",fmt:v=>v.toFixed(1),
+  sc:v=>band(v,[-10,-20,-25,-30]),rule:">−10 · −10…−20 · −20…−25 · −25…−30 · <−30",fb:[-33.2,"2026-10"]},
+ {k:"unemp",n:"Rata șomajului",w:4,q:"une_rt_m?geo=RO&s_adj=SA&age=TOTAL&sex=T&unit=PC_ACT&lastTimePeriod=3",fmt:v=>v.toFixed(1)+"%",
+  sc:v=>v<5?2:v<5.5?1:v<6?0:v<7?-1:-2,rule:"<5 · 5–5,5 · 5,5–6 · 6–7 · >7",fb:[6.4,"2026-08"]},
+ {k:"hpi",n:"Prețurile locuințelor, an/an",w:6,q:"prc_hpi_q?geo=RO&purchase=TOTAL&unit=RCH_A&lastTimePeriod=3",fmt:v=>(v>0?"+":"")+v.toFixed(1)+"%",
+  sc:v=>v>5?1:v>=0?0:v>=-3?-1:-2,rule:">5 · 0–5 · −3–0 · <−3 (max +1: prețuri mari = accesibilitate mică)",fb:[12.1,"2026-Q2"]},
+ {k:"tour",n:"Înnoptări turiști, ultimele 3 luni vs. anul trecut",w:6,q:"tour_occ_nim?geo=RO&unit=NR&c_resid=TOTAL&nace_r2=I551-I553&lastTimePeriod=15",yoy3:true,fmt:v=>(v>0?"+":"")+v.toFixed(1)+"%",
+  sc:v=>band(v,[5,1,-1,-5]),rule:">5 · 1–5 · ±1 · −5…−1 · <−5",fb:[3.0,"2026-08"]},
+ {k:"retail",n:"Vânzări retail (volum), media ultimelor 3 luni",w:4,q:"sts_trtu_m?geo=RO&indic_bt=VOL_SLS&nace_r2=G47&s_adj=CA&unit=PCH_SM&lastTimePeriod=3",avg:true,fmt:v=>(v>0?"+":"")+v.toFixed(1)+"%",
+  sc:v=>band(v,[5,2,-2,-5]),rule:">5 · 2–5 · ±2 · −5…−2 · <−5",fb:[-4.0,"2026-08"]},
+ {k:"ea",n:"Inflația în zona euro",w:2,q:"prc_hicp_minr?geo=EA&coicop18=TOTAL&unit=RCH_A&lastTimePeriod=3",fmt:v=>v.toFixed(1)+"%",
+  sc:v=>v<2.5?1:v<=3.5?0:-1,rule:"<2,5 · 2,5–3,5 · >3,5",fb:[3.8,"2026-09"]},
+ {k:"ecb",n:"Dobânda BCE (depozit) și direcția ei",w:2,ecb:"FM/D.U2.EUR.4F.KR.DFR.LEV?lastNObservations=200&format=jsondata",fmt:v=>v.toFixed(2)+"%",
+  sc:(v,prev)=>v<prev?1:v>prev?-1:0,rule:"scade · stabilă · crește (față de acum ~6 luni)",fb:[2.5,"2026-10",2.25]},
+];
+async function getJSON(u,ms=12000){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{signal:c.signal});if(!r.ok)throw new Error(r.status);return await r.json()}finally{clearTimeout(t)}}
+function jsonstat(d){const idx=d.dimension.time.category.index;const inv={};for(const[t,i]of Object.entries(idx))inv[i]=t;return Object.entries(d.value).map(([i,v])=>[inv[+i],v]).sort((a,b)=>a[0]<b[0]?-1:1)}
+async function load(ind){
+  try{
+    if(ind.ecb){const d=await getJSON(ECB+ind.ecb);const obs=Object.values(d.dataSets[0].series)[0].observations;const times=d.structure.dimensions.observation[0].values;
+      const keys=Object.keys(obs).map(Number).sort((a,b)=>a-b);const last=keys[keys.length-1], first=keys[0];
+      return {v:obs[last][0],per:times[last].id,prev:obs[first][0],live:true}}
+    const s=jsonstat(await getJSON(EU+ind.q)); if(!s.length) throw new Error("gol");
+    if(ind.yoy3){const L=s.length; const cur=s.slice(L-3).reduce((a,x)=>a+x[1],0), old=s.slice(L-15,L-12).reduce((a,x)=>a+x[1],0); return {v:(cur/old-1)*100,per:s[L-1][0],live:true}}
+    if(ind.avg){const v=s.reduce((a,x)=>a+x[1],0)/s.length; return {v,per:s[s.length-1][0],live:true}}
+    const last=s[s.length-1]; return {v:last[1],per:last[0],live:true};
+  }catch(e){return {v:ind.fb[0],per:ind.fb[1],prev:ind.fb[2],live:false}}
+}
+const LUNI=["ian.","feb.","mar.","apr.","mai","iun.","iul.","aug.","sep.","oct.","nov.","dec."];
+function per(p){let m;if(m=/^(\d{4})-Q(\d)$/.exec(p))return "trim. "+["I","II","III","IV"][+m[2]-1]+" "+m[1];if(m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(p))return m[3]+"."+m[2]+"."+m[1];if(m=/^(\d{4})-(\d{2})$/.exec(p))return LUNI[+m[2]-1]+" "+m[1];return p}
+function tstate(t){if(t<=-60)return["RECESIUNE","#B0442B"];if(t<-20)return["CONTRACȚIE","#F2826A"];if(t<=20)return["NEUTRU","#83928F"];if(t<60)return["EXPANSIUNE","#8AC8A6"];return["BOOM","#31635F"]}
+function gauge(id,t,dark){const cx=160,cy=165,r=130,ang=Math.PI*(1-(t+100)/200);
+  const arc=(a0,a1,c)=>{const x0=cx+r*Math.cos(a0),y0=cy-r*Math.sin(a0),x1=cx+r*Math.cos(a1),y1=cy-r*Math.sin(a1);return `<path d="M${x0},${y0} A${r},${r} 0 0 1 ${x1},${y1}" stroke="${c}" stroke-width="22" fill="none"/>`};
+  const segs=[[-100,-60,"#B0442B"],[-60,-20,"#F2826A"],[-20,20,"#D4DAE0"],[20,60,"#8AC8A6"],[60,100,"#31635F"]];
+  const ink=dark?"#fff":"#2A4345";
+  document.getElementById(id).innerHTML=segs.map(([a,b,c])=>arc(Math.PI*(1-(a+100)/200),Math.PI*(1-(b+100)/200),c)).join("")+
+   `<line x1="${cx}" y1="${cy}" x2="${cx+(r-8)*Math.cos(ang)}" y2="${cy-(r-8)*Math.sin(ang)}" stroke="${ink}" stroke-width="6" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="10" fill="${ink}"/>
+   <text x="22" y="186" font-size="12" fill="#83928F">−100</text><text x="262" y="186" font-size="12" fill="#83928F">+100</text>`}
+function show(n,t,note){const[st,col]=tstate(t);gauge("g"+n,t,n===2);const T=document.getElementById("t"+n);T.textContent=(t>0?"+":"")+t;T.style.color=n===2?"#8AC8A6":col;const S=document.getElementById("s"+n);S.textContent=st;S.style.color=n===2?"#fff":col;document.getElementById("d"+n).textContent=note}
+async function run(){
+  const res=await Promise.all(IND.map(load));
+  let sum=0,tw=0,liveN=0;
+  const rows=IND.map((ind,i)=>{const r=res[i];const sc=ind.ecb?ind.sc(r.v,r.prev??r.v):ind.sc(r.v);sum+=sc*ind.w;tw+=ind.w;if(r.live)liveN++;
+    const src=ind.ecb?`<a href="https://data.ecb.europa.eu/" target="_blank" rel="noopener">BCE</a>`:`<a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.q.split("?")[0]}/default/table" target="_blank" rel="noopener">Eurostat</a>`;
+    return `<tr><td><span class="live ${r.live?"":"off"}"></span><b>${ind.n}</b></td><td>${ind.fmt(r.v).replace(/\./g,",").replace("-","−")}</td><td>${per(r.per)}</td><td style="font-size:11px;color:var(--grey)">${ind.rule}</td><td><span class="score s${sc}">${sc>0?"+":""}${sc}</span></td><td>${ind.w}</td><td>${src}</td></tr>`});
+  document.getElementById("rows").innerHTML=rows.join("");
+  const pub=Math.round(sum/(2*tw)*100);
+  show(1,pub,`${liveN} din ${IND.length} indicatori citiți live acum`);
+  show(2,HUBIX.temp,`date complete, actualizate la ${HUBIX.date}`);
+  const diff=HUBIX.temp-pub;
+  document.getElementById("diffBox").innerHTML=`<div class="lbl">Diferența</div><div style="font-size:20px;font-weight:800;margin-top:4px">${Math.abs(diff)} puncte între termometrul public și cel HUBIX</div>
+    <div class="note" style="font-size:14px">${diff<0?"Datele publice arată o piață mai caldă decât este. Ce lipsește din ele (tranzacțiile reale, creditarea, puterea de cumpărare, taxele și performanța efectivă a apartamentelor) trage temperatura în jos.":"Datele complete arată o piață mai caldă decât sugerează indicatorii publici."} Diferența asta e motivul pentru care deciziile despre un apartament se iau pe date complete, nu doar pe știri.</div>`;
+  document.getElementById("xrows").innerHTML=HUBIX.extra.map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td style="color:var(--grey)">${x[2]}</td></tr>`).join("");
+  document.getElementById("stamp").textContent="Date citite la "+new Date().toLocaleString("ro-RO");
+}
+// ===== Prag =====
+function renderPrag(){const v=id=>parseFloat(document.getElementById(id).value)||0;const rate=v("p_rate"),th=v("p_th");document.getElementById("p_thV").textContent=th+"%";
+  const empty=-v("p_empty"),lt=v("p_lt")*55/60*0.9,st=30*v("p_occ")/100*v("p_adr")*(1+v("p_prem")/100)*0.88/1.11*0.75-100;
+  const opts=[["Îl las gol",empty,"pierd rata întreagă plus întreținerea"],["Chirie pe termen lung",lt,"preț fixat pe un an, uzură mai mare"],["Regim hotelier, administrat",st,"preț ajustat zilnic, prima de "+v("p_prem")+"%"]];
+  const best=Math.max(...opts.map(o=>o[1]));
+  document.getElementById("p_opts").innerHTML=opts.map(([n,val,d])=>{const cov=Math.max(0,val/rate*100),ok=cov>=th;return `<div class="opt ${val===best?'best':''}"><div class="lbl">${n}</div><div class="v" style="color:${val<0?'var(--coral)':'var(--deep)'}">${val<0?"−":""}${Math.abs(Math.round(val))} €/lună</div><div style="font-weight:700;margin-top:4px">acoperă ${Math.round(cov)}% din rată</div><div class="note">${d}</div><div style="margin-top:8px"><span class="pill" style="background:${ok?'#DDF0E6':'#FDE3DC'};color:${ok?'var(--deep)':'#B0442B'}">${ok?"peste pragul meu":"sub pragul meu"}</span></div></div>`}).join("")}
+// ===== Simulator =====
+function renderSim(){const v=id=>parseFloat(document.getElementById(id).value)||0;const nights=30*v("s_occ")/100,gross=nights*v("s_adr"),dir=v("s_dir")/100;
+  const base=(gross*(1-dir)*(1-v("s_ota")/100)+gross*dir)/(1+v("s_vat")/100);const owner=base*(1-v("s_mgmt")/100)-v("s_cost");const lt=v("s_rent")*55/60*v("s_fx")-130;
+  const f=x=>Math.round(x).toLocaleString("ro-RO")+" lei/lună";document.getElementById("r_lt").textContent=f(lt);document.getElementById("r_lt_n").textContent=`${v("s_rent")} € × 55/60 luni, minus impozit și altele`;
+  document.getElementById("r_str").textContent=f(owner);document.getElementById("r_str_n").textContent=`${nights.toFixed(0)} nopți × ${v("s_adr")} lei; ${v("s_dir")}% rezervări directe, fără comision de platformă`;
+  const d=(owner-lt)/lt*100;document.getElementById("r_delta").innerHTML=d>=0?`Regimul hotelier aduce <span style="color:var(--deep)">+${d.toFixed(0)}%</span> față de chiria clasică, în acest scenariu.`:`În acest scenariu, chiria clasică e mai bună cu <span style="color:var(--coral)">${(-d).toFixed(0)}%</span>.`}
+async function fx(){try{const d=await getJSON(ECB+"EXR/D.RON.EUR.SP00.A?lastNObservations=1&format=jsondata");const o=Object.values(d.dataSets[0].series)[0].observations;const val=Object.values(o)[0][0];document.getElementById("s_fx").value=val.toFixed(4);document.getElementById("fxsrc").textContent="(BCE, live)";renderSim()}catch(e){}}
+// ===== Orașe =====
+const CITIES=[["București",60,35,5],["Timișoara",60,35,5],["Cluj-Napoca",55,40,5],["Sibiu",30,50,20],["Brașov",25,45,30],["Mamaia",5,15,80]];
+function renderCity(){document.getElementById("crows").innerHTML=CITIES.map(([n,b,w,s])=>{const sh=Math.round(b*0.85+w*0.95+s*0.55),mid=100-sh;const rec=s>=50?"Vara regim hotelier, extrasezon termen mediu":b>=55?"Regim hotelier tot anul, firme luni–joi":"Regim hotelier, oferte pentru weekend și evenimente";
+  return `<tr><td><b>${n}</b></td><td>${b}%</td><td>${w}%</td><td>${s}%</td><td>${rec}</td><td style="min-width:160px"><div class="mix"><div style="width:${sh}%;background:#31635F">${sh}</div><div style="width:${mid}%;background:#F2826A">${mid}</div></div></td></tr>`}).join("")}
+// ===== Navigare =====
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["termo","prag","sim","city"].forEach(v=>document.getElementById("v-"+v).classList.toggle("hidden",v!==b.dataset.v));history.replaceState(null,"","#"+b.dataset.v)});
+const h=location.hash.slice(1);if(["prag","sim","city"].includes(h))document.querySelector(`nav button[data-v="${h}"]`).click();
+document.querySelectorAll("#v-prag input").forEach(i=>i.oninput=renderPrag);document.querySelectorAll("#v-sim input").forEach(i=>i.oninput=renderSim);
+renderPrag();renderSim();renderCity();fx();run();
+</script>
+</body>
+</html>
