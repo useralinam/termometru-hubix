@@ -31,6 +31,9 @@
   .note{font-size:12px;color:var(--grey);margin-top:8px;line-height:1.5}
   .dark .note{color:#cfe6dc}
   table{width:100%;border-collapse:collapse;font-size:13px}
+  .mi{width:120px!important;padding:6px 8px!important;font-size:13px!important}
+  select.mi{width:290px!important;font:600 13px Montserrat,Arial;border:1px solid var(--line);border-radius:8px;color:var(--teal);background:#fff}
+  tr.changed td{background:#FFF8EC}
   th{text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--grey);padding:8px;border-bottom:1px solid var(--line)}
   td{padding:9px 8px;border-bottom:1px solid var(--mist);vertical-align:top}
   .score{display:inline-block;min-width:34px;text-align:center;font-weight:800;border-radius:8px;padding:2px 6px}
@@ -70,7 +73,7 @@
 <!-- TERMOMETRU -->
 <section id="v-termo">
   <h1>Suntem în expansiune sau în contracție?</h1>
-  <p class="lead">Pagina citește la fiecare deschidere ultimele date publicate de Eurostat și de Banca Centrală Europeană, dă fiecărui indicator un scor și calculează o temperatură de la −100 la +100. Alături vedeți termometrul HUBIX, care folosește în plus date din platforme plătite și din operarea propriilor apartamente.</p>
+  <p class="lead">Pagina citește la fiecare deschidere ultimele date publicate de Eurostat și de Banca Centrală Europeană, dă fiecărui indicator un scor și calculează o temperatură de la −100 la +100. Alături vedeți termometrul complet: aceiași indicatori publici, plus 8 indicatori pe care HUBIX îi urmărește din surse plătite și din operarea propriilor apartamente. Valorile lor sunt precompletate cu estimarea HUBIX și le puteți modifica mai jos.</p>
   <div class="row">
     <div class="card gwrap">
       <svg viewBox="0 0 320 190" width="300" id="g1"></svg>
@@ -78,7 +81,7 @@
     </div>
     <div class="card gwrap dark">
       <svg viewBox="0 0 320 190" width="300" id="g2"></svg>
-      <div><div class="lbl">Termometrul HUBIX · date complete</div><div class="temp" id="t2">…</div><div class="state" id="s2"></div><div class="note" id="d2"></div></div>
+      <div><div class="lbl">Termometrul complet · estimarea HUBIX</div><div class="temp" id="t2">…</div><div class="state" id="s2"></div><div class="note" id="d2"></div></div>
     </div>
   </div>
   <div class="card" style="margin-top:16px" id="diffBox"></div>
@@ -89,9 +92,11 @@
     <div class="note"><span class="live"></span>citit acum din sursă · <span class="live off"></span>sursa nu a răspuns, se afișează ultima valoare cunoscută. Scor de la −2 (frânează piața) la +2 (o împinge).</div>
   </div>
 
-  <h2>Ce mai folosește HUBIX, în plus</h2>
+  <h2>Ce mai folosește HUBIX, în plus: introduceți propriile valori</h2>
+  <p class="lead" style="margin-bottom:10px">Valorile de mai jos sunt estimarea HUBIX la <b id="mdate"></b>. Schimbați oricare dintre ele și termometrul complet se recalculează pe loc.</p>
   <div class="card" style="overflow:auto">
-    <table><thead><tr><th>Indicator</th><th>Valoare</th><th>De ce nu e în varianta publică</th></tr></thead><tbody id="xrows"></tbody></table>
+    <table><thead><tr><th>Indicator</th><th>Valoarea dvs.</th><th>Regula de scor</th><th>Scor</th><th>Pondere</th><th>Sursa estimării HUBIX</th></tr></thead><tbody id="xrows"></tbody></table>
+    <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap"><button id="mreset" style="border:0;border-radius:10px;padding:10px 16px;font:800 13px Montserrat,Arial;background:var(--teal);color:#fff;cursor:pointer">Revino la estimarea HUBIX</button><span class="note" id="mstate" style="margin:0"></span></div>
   </div>
   <div class="note">Stări: RECESIUNE sub −60 · CONTRACȚIE −60…−20 · NEUTRU −20…+20 · EXPANSIUNE +20…+60 · BOOM peste +60. Instrument informativ, nu recomandare de investiții.</div>
 </section>
@@ -149,19 +154,35 @@
 <footer>HUBIX Renting · Termometrul pieței imobiliare · Date publice: Eurostat, Banca Centrală Europeană. Instrument informativ, nu constituie recomandare de investiții.<br><span id="stamp"></span></footer>
 
 <script>
-// ===== Config: termometrul HUBIX (actualizat manual de echipă) =====
-const HUBIX = {
-  temp: -41, date: "27 octombrie 2026",
-  extra: [
-    ["Dobânda de politică monetară BNR", "6,50%, menținută (8 oct.)", "BNR nu publică seria printr-un API public"],
-    ["Tranzacții imobiliare ANCPI", "−17,8% (ian.–sep.)", "comunicate lunare, fără API"],
-    ["Credite ipotecare noi", "−8,5% (sem. I)", "statistici BNR prelucrate"],
-    ["Salariul real", "−0,5% an/an (aug.)", "INS, fără API public stabil"],
-    ["Politica fiscală pentru gospodării", "TVA 21%, impozit locuință +70–80%", "evaluare calitativă"],
-    ["Performanța regimului hotelier", "venit, ocupare, tarif mediu pe oraș", "platforme plătite (AirDNA) și datele proprii din huburile HUBIX"],
-    ["Petrol (Brent), Fed", "Brent ~115 $; Fed crește dobânzile", "sursele nu permit citirea directă din browser"],
-  ]
-};
+// ===== Indicatori HUBIX introduși manual (estimarea HUBIX, editabilă) =====
+const MDATE = "27 octombrie 2026";
+const band5=(v,b)=>v>=b[0]?2:v>=b[1]?1:v>=b[2]?0:v>=b[3]?-1:-2;
+const MAN=[
+ {n:"Dobânda de politică monetară BNR",w:10,type:"sel",def:3,src:"BNR: 6,50%, menținută pe 8 oct.; scăderi așteptate în 2027",
+  opts:[["Ciclu de scăderi în curs",2],["Scădere așteptată în 3 luni",1],["Menținută, scădere în ~6 luni",0],["Menținută, fără scăderi curând",-1],["În creștere",-2]]},
+ {n:"Salariul real, an/an (%)",w:10,type:"num",def:-0.5,src:"INS: august 2026",sc:v=>band5(v,[5,2,0,-3]),rule:">5 · 2–5 · 0–2 · −3–0 · <−3"},
+ {n:"Tranzacții imobiliare ANCPI, an/an (%)",w:10,type:"num",def:-17.8,src:"ANCPI: ianuarie–septembrie 2026",sc:v=>band5(v,[10,2,-2,-15]),rule:">10 · 2–10 · ±2 · −15…−2 · <−15"},
+ {n:"Credite ipotecare noi, an/an (%)",w:6,type:"num",def:-8.5,src:"BNR / ZF: semestrul I 2026",sc:v=>band5(v,[10,2,-2,-15]),rule:">10 · 2–10 · ±2 · −15…−2 · <−15"},
+ {n:"Politica fiscală pentru gospodării",w:8,type:"sel",def:4,src:"TVA 21%, impozit locuință +70–80%, TVA 9% la locuințe încheiat",
+  opts:[["Relaxare majoră",2],["Relaxare",1],["Neutră",0],["Înăsprire",-1],["Înăsprire majoră",-2]]},
+ {n:"Regim hotelier: venit pe listare, an/an (%)",w:4,type:"num",def:36.7,src:"AirDNA (plătit), București, 12 luni; date proprii din huburile HUBIX",sc:v=>band5(v,[15,5,-5,-15])===2?1:band5(v,[15,5,-5,-15]),rule:">5 · ±5 · −15…−5 · <−15 (max +1 la ocupare sub 60%)"},
+ {n:"Petrol Brent ($/baril)",w:6,type:"num",def:115,src:"piețele internaționale, octombrie 2026; Fed și BCE cresc dobânzile",sc:v=>v<70?1:v<90?0:v<100?-1:-2,rule:"<70 · 70–90 · 90–100 · >100"},
+ {n:"Perspective (dobânzi și creștere)",w:2,type:"sel",def:1,src:"bănci: scăderi BNR în 2027; FMI/CE: PIB 2027 +2,2–2,3%",
+  opts:[["Scăderi de dobândă în 3 luni",2],["Scăderi în 6–12 luni, creștere în 2027",1],["Fără semnale",0],["Creșteri de dobândă așteptate",-1]]},
+];
+const mval=MAN.map(m=>m.def);
+function mscore(i){const m=MAN[i],v=mval[i];return m.type==="sel"?m.opts[v][1]:m.sc(+v)}
+function renderManual(){
+  document.getElementById("mdate").textContent=MDATE;
+  document.getElementById("xrows").innerHTML=MAN.map((m,i)=>{const sc=mscore(i),ch=mval[i]!==m.def;
+    const inp=m.type==="sel"?`<select class="mi" data-i="${i}">${m.opts.map((o,j)=>`<option value="${j}" ${j==mval[i]?"selected":""}>${o[0]}</option>`).join("")}</select>`
+      :`<input type="number" step="0.1" class="mi" data-i="${i}" value="${mval[i]}">`;
+    const rule=m.type==="sel"?"opțiunea aleasă":m.rule;
+    return `<tr class="${ch?"changed":""}"><td><b>${m.n}</b></td><td>${inp}</td><td style="font-size:11px;color:var(--grey)">${rule}</td><td><span class="score s${sc}">${sc>0?"+":""}${sc}</span></td><td>${m.w}</td><td style="font-size:12px;color:var(--grey)">${m.src}</td></tr>`}).join("");
+  document.querySelectorAll("#xrows .mi").forEach(e=>e.onchange=()=>{const i=+e.dataset.i;mval[i]=MAN[i].type==="sel"?+e.value:parseFloat(e.value);if(isNaN(mval[i]))return;recalc(false)});
+  const n=MAN.filter((m,i)=>mval[i]!==m.def).length;
+  document.getElementById("mstate").textContent=n?`Ați modificat ${n} ${n===1?"valoare":"valori"} față de estimarea HUBIX.`:"Afișați estimarea HUBIX.";
+}
 // ===== Indicatori publici live =====
 const EU="https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/";
 const ECB="https://data-api.ecb.europa.eu/service/data/";
@@ -212,6 +233,7 @@ function gauge(id,t,dark){const cx=160,cy=165,r=130,ang=Math.PI*(1-(t+100)/200);
    `<line x1="${cx}" y1="${cy}" x2="${cx+(r-8)*Math.cos(ang)}" y2="${cy-(r-8)*Math.sin(ang)}" stroke="${ink}" stroke-width="6" stroke-linecap="round"/><circle cx="${cx}" cy="${cy}" r="10" fill="${ink}"/>
    <text x="22" y="186" font-size="12" fill="#83928F">−100</text><text x="262" y="186" font-size="12" fill="#83928F">+100</text>`}
 function show(n,t,note){const[st,col]=tstate(t);gauge("g"+n,t,n===2);const T=document.getElementById("t"+n);T.textContent=(t>0?"+":"")+t;T.style.color=n===2?"#8AC8A6":col;const S=document.getElementById("s"+n);S.textContent=st;S.style.color=n===2?"#fff":col;document.getElementById("d"+n).textContent=note}
+let PUB={sum:0,tw:0,live:0};
 async function run(){
   const res=await Promise.all(IND.map(load));
   let sum=0,tw=0,liveN=0;
@@ -219,14 +241,21 @@ async function run(){
     const src=ind.ecb?`<a href="https://data.ecb.europa.eu/" target="_blank" rel="noopener">BCE</a>`:`<a href="https://ec.europa.eu/eurostat/databrowser/view/${ind.q.split("?")[0]}/default/table" target="_blank" rel="noopener">Eurostat</a>`;
     return `<tr><td><span class="live ${r.live?"":"off"}"></span><b>${ind.n}</b></td><td>${ind.fmt(r.v).replace(/\./g,",").replace("-","−")}</td><td>${per(r.per)}</td><td style="font-size:11px;color:var(--grey)">${ind.rule}</td><td><span class="score s${sc}">${sc>0?"+":""}${sc}</span></td><td>${ind.w}</td><td>${src}</td></tr>`});
   document.getElementById("rows").innerHTML=rows.join("");
-  const pub=Math.round(sum/(2*tw)*100);
-  show(1,pub,`${liveN} din ${IND.length} indicatori citiți live acum`);
-  show(2,HUBIX.temp,`date complete, actualizate la ${HUBIX.date}`);
-  const diff=HUBIX.temp-pub;
-  document.getElementById("diffBox").innerHTML=`<div class="lbl">Diferența</div><div style="font-size:20px;font-weight:800;margin-top:4px">${Math.abs(diff)} puncte între termometrul public și cel HUBIX</div>
-    <div class="note" style="font-size:14px">${diff<0?"Datele publice arată o piață mai caldă decât este. Ce lipsește din ele (tranzacțiile reale, creditarea, puterea de cumpărare, taxele și performanța efectivă a apartamentelor) trage temperatura în jos.":"Datele complete arată o piață mai caldă decât sugerează indicatorii publici."} Diferența asta e motivul pentru care deciziile despre un apartament se iau pe date complete, nu doar pe știri.</div>`;
-  document.getElementById("xrows").innerHTML=HUBIX.extra.map(x=>`<tr><td><b>${x[0]}</b></td><td>${x[1]}</td><td style="color:var(--grey)">${x[2]}</td></tr>`).join("");
+  PUB={sum,tw,live:liveN};
+  recalc(true);
   document.getElementById("stamp").textContent="Date citite la "+new Date().toLocaleString("ro-RO");
+}
+function recalc(full){
+  const pub=Math.round(PUB.sum/(2*PUB.tw)*100);
+  let ms=0,mw=0;MAN.forEach((m,i)=>{ms+=mscore(i)*m.w;mw+=m.w});
+  const comp=Math.round((PUB.sum+ms)/(2*(PUB.tw+mw))*100);
+  const edited=MAN.some((m,i)=>mval[i]!==m.def);
+  show(1,pub,`${PUB.live} din ${IND.length} indicatori citiți live acum`);
+  show(2,comp,edited?`indicatorii publici live + valorile introduse de dvs.`:`indicatorii publici live + estimarea HUBIX din ${MDATE}`);
+  const diff=comp-pub;
+  document.getElementById("diffBox").innerHTML=`<div class="lbl">Diferența</div><div style="font-size:20px;font-weight:800;margin-top:4px">${Math.abs(diff)} puncte între termometrul public și cel complet</div>
+    <div class="note" style="font-size:14px">${diff<0?"Datele publice arată o piață mai caldă decât este. Ce lipsește din ele (tranzacțiile reale, creditarea, puterea de cumpărare, taxele și performanța efectivă a apartamentelor) trage temperatura în jos.":diff>0?"Cu valorile alese, datele complete arată o piață mai caldă decât sugerează indicatorii publici.":"Cu valorile alese, cele două termometre coincid."} Diferența asta e motivul pentru care deciziile despre un apartament se iau pe date complete, nu doar pe știri.</div>`;
+  renderManual();
 }
 // ===== Prag =====
 function renderPrag(){const v=id=>parseFloat(document.getElementById(id).value)||0;const rate=v("p_rate"),th=v("p_th");document.getElementById("p_thV").textContent=th+"%";
@@ -249,7 +278,8 @@ function renderCity(){document.getElementById("crows").innerHTML=CITIES.map(([n,
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));["termo","prag","sim","city"].forEach(v=>document.getElementById("v-"+v).classList.toggle("hidden",v!==b.dataset.v));history.replaceState(null,"","#"+b.dataset.v)});
 const h=location.hash.slice(1);if(["prag","sim","city"].includes(h))document.querySelector(`nav button[data-v="${h}"]`).click();
 document.querySelectorAll("#v-prag input").forEach(i=>i.oninput=renderPrag);document.querySelectorAll("#v-sim input").forEach(i=>i.oninput=renderSim);
-renderPrag();renderSim();renderCity();fx();run();
+document.getElementById("mreset").onclick=()=>{MAN.forEach((m,i)=>mval[i]=m.def);recalc(false)};
+renderManual();renderPrag();renderSim();renderCity();fx();run();
 </script>
 </body>
 </html>
