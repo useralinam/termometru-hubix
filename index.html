@@ -109,7 +109,7 @@ const band5=(v,b)=>v>=b[0]?2:v>=b[1]?1:v>=b[2]?0:v>=b[3]?-1:-2;
 const MAN=[
  {n:"Dobânda de politică monetară BNR",w:10,type:"sel",def:3,src:"BNR: 6,50%, menținută pe 8 oct.; scăderi așteptate în 2027",
   opts:[["Ciclu de scăderi în curs",2],["Scădere așteptată în 3 luni",1],["Menținută, scădere în ~6 luni",0],["Menținută, fără scăderi curând",-1],["În creștere",-2]]},
- {n:"Salariul real, an/an (%)",w:10,type:"num",def:-0.5,src:"INS: august 2026",sc:v=>band5(v,[5,2,0,-3]),rule:">5 · 2–5 · 0–2 · −3–0 · <−3"},
+ {n:"Salariul mediu net real, România, an/an (%)",w:10,type:"num",def:-0.5,src:"INS, august 2026: salariul mediu net 5.688 lei/lună (~1.064 € la cursul BCE din 30.10.2026), +5,6% nominal; ajustat cu inflația: −0,5%",sc:v=>band5(v,[5,2,0,-3]),rule:">5 · 2–5 · 0–2 · −3–0 · <−3"},
  {n:"Tranzacții imobiliare ANCPI, an/an (%)",w:10,type:"num",def:-17.8,src:"ANCPI: ianuarie–septembrie 2026",sc:v=>band5(v,[10,2,-2,-15]),rule:">10 · 2–10 · ±2 · −15…−2 · <−15"},
  {n:"Credite ipotecare noi, an/an (%)",w:6,type:"num",def:-8.5,src:"BNR / ZF: semestrul I 2026",sc:v=>band5(v,[10,2,-2,-15]),rule:">10 · 2–10 · ±2 · −15…−2 · <−15"},
  {n:"Politica fiscală pentru gospodării",w:8,type:"sel",def:4,src:"TVA 21%, impozit locuință +70–80%, TVA 9% la locuințe încheiat",
