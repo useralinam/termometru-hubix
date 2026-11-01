@@ -67,7 +67,7 @@
 <!-- TERMOMETRU -->
 <section id="v-termo">
   <h1>Suntem în expansiune sau în contracție?</h1>
-  <p class="lead">Pagina citește la fiecare deschidere ultimele date publicate de Eurostat și de Banca Centrală Europeană, dă fiecărui indicator un scor și calculează o temperatură de la −100 la +100. Alături vedeți termometrul complet: aceiași indicatori publici, plus 8 indicatori pe care HUBIX îi urmărește din surse plătite și din operarea propriilor apartamente. Valorile lor sunt precompletate cu estimarea HUBIX și le puteți modifica mai jos.</p>
+  <p class="lead">Pagina citește la fiecare deschidere ultimele date publicate de Eurostat și de Banca Centrală Europeană, dă fiecărui indicator un scor și calculează o temperatură de la −100 la +100. Alături vedeți termometrul complet: aceiași indicatori publici, plus 8 indicatori pe care HUBIX îi culege manual din INS, BNR, ANCPI, AirDNA și piețele internaționale, pentru că nu pot fi citiți automat. Valorile lor sunt precompletate cu estimarea HUBIX și le puteți modifica mai jos.</p>
   <div class="row">
     <div class="card gwrap">
       <svg viewBox="0 0 320 190" width="300" id="g1"></svg>
@@ -114,7 +114,7 @@ const MAN=[
  {n:"Credite ipotecare noi, an/an (%)",w:6,type:"num",def:-8.5,src:"BNR / ZF: semestrul I 2026",sc:v=>band5(v,[10,2,-2,-15]),rule:">10 · 2–10 · ±2 · −15…−2 · <−15"},
  {n:"Politica fiscală pentru gospodării",w:8,type:"sel",def:4,src:"TVA 21%, impozit locuință +70–80%, TVA 9% la locuințe încheiat",
   opts:[["Relaxare majoră",2],["Relaxare",1],["Neutră",0],["Înăsprire",-1],["Înăsprire majoră",-2]]},
- {n:"Regim hotelier: venit pe listare, an/an (%)",w:4,type:"num",def:36.7,src:"AirDNA (plătit), București, 12 luni; date proprii din huburile HUBIX",sc:v=>band5(v,[15,5,-5,-15])===2?1:band5(v,[15,5,-5,-15]),rule:">5 · ±5 · −15…−5 · <−15 (max +1 la ocupare sub 60%)"},
+ {n:"Regim hotelier: venit pe listare, an/an (%)",w:4,type:"num",def:36.7,src:"AirDNA, pagina publică de piață pentru București: 12 luni până în iunie 2026; ocupare ~55%",sc:v=>band5(v,[15,5,-5,-15])===2?1:band5(v,[15,5,-5,-15]),rule:">5 · ±5 · −15…−5 · <−15 (max +1 la ocupare sub 60%)"},
  {n:"Petrol Brent ($/baril)",w:6,type:"num",def:115,src:"piețele internaționale, octombrie 2026; Fed și BCE cresc dobânzile",sc:v=>v<70?1:v<90?0:v<100?-1:-2,rule:"<70 · 70–90 · 90–100 · >100"},
  {n:"Perspective (dobânzi și creștere)",w:2,type:"sel",def:1,src:"bănci: scăderi BNR în 2027; FMI/CE: PIB 2027 +2,2–2,3%",
   opts:[["Scăderi de dobândă în 3 luni",2],["Scăderi în 6–12 luni, creștere în 2027",1],["Fără semnale",0],["Creșteri de dobândă așteptate",-1]]},
